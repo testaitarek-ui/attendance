@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1F3A">
+<title>تسجيل الحضور — أكاديمية الشروق</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1F3A; --navy2:#17407A; --gold:#C9A24B; --gold2:#E8C873; --goldd:#9A7A2E;
+  --bg:#F5F2EA; --ink:#14213D; --muted:#7A879C; --line:#DCE2EC; --ok:#1F8A70; --bad:#B42318;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  font-family:'Tajawal','Cairo',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;
+  background:var(--bg); color:var(--ink); min-height:100vh; min-height:100dvh;
+  -webkit-text-size-adjust:100%; line-height:1.6;
+}
+.hero{
+  position:relative; overflow:hidden; text-align:center; color:#fff;
+  padding:calc(env(safe-area-inset-top,0px) + 26px) 20px 92px;
+  background:
+    radial-gradient(120% 140% at 85% -10%, rgba(55,110,190,.55) 0%, transparent 55%),
+    linear-gradient(160deg,#0B1F3A 0%,#0E2A52 60%,#143563 100%);
+  border-radius:0 0 40px 40px;
+}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(232,200,115,.28);pointer-events:none}
+.hero::before{width:320px;height:320px;top:-150px;left:-110px}
+.hero::after{width:220px;height:220px;bottom:-120px;right:-70px;border-color:rgba(232,200,115,.2)}
+.logo-pill{
+  display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:22px;
+  padding:10px 18px;min-width:84px;min-height:68px;box-shadow:0 14px 30px -12px rgba(0,0,0,.5);
+  position:relative;z-index:1;
+}
+.logo-pill img{height:52px;max-width:200px;object-fit:contain;display:block}
+.logo-pill .mono{font-size:34px;font-weight:800;color:var(--navy)}
+.hero h1{margin:16px 0 2px;font-size:26px;font-weight:800;position:relative;z-index:1}
+.hero p{margin:0;font-size:13.5px;color:rgba(255,255,255,.78);position:relative;z-index:1}
+.gold-rule{width:46px;height:3px;border-radius:3px;margin:12px auto 0;background:linear-gradient(90deg,var(--gold),var(--gold2));position:relative;z-index:1}
+
+.wrap{max-width:520px;margin:-58px auto 0;padding:0 16px calc(env(safe-area-inset-bottom,0px) + 28px);position:relative}
+.card{
+  background:#fff;border-radius:28px;padding:24px 20px;border:1px solid rgba(201,162,75,.2);
+  box-shadow:0 24px 50px -22px rgba(11,31,58,.4),0 2px 6px rgba(11,31,58,.06);
+  animation:rise .45s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.session{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;margin-bottom:10px;
+  background:linear-gradient(135deg,#FCF8EC,#F5EDD6);border:1px solid #EADBB3;
+}
+.session .txt{flex:1;min-width:0}
+.session .course{font-weight:800;font-size:15.5px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.session .lec{font-size:12.5px;color:var(--goldd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:16px;color:var(--navy);background:#fff;border-radius:12px;padding:6px 10px;min-width:68px;text-align:center;box-shadow:0 2px 8px rgba(11,31,58,.08)}
+.timer small{display:block;font-size:10px;font-weight:500;color:var(--muted);line-height:1}
+.timer.low{color:var(--bad)}
+.bar{height:4px;border-radius:4px;background:#EFE4C3;margin:0 6px 20px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1s linear}
+
+.rules{
+  background:#F8FAFD;border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin-bottom:18px;
+  font-size:12.5px;color:#4A5873;display:flex;flex-wrap:wrap;gap:8px 16px;
+}
+.rules span{display:inline-flex;align-items:center;gap:5px;font-weight:700;color:var(--navy)}
+.rules span::before{content:"•";color:var(--gold);font-size:16px;line-height:1}
+
+.field{position:relative;margin-bottom:16px}
+.field input{
+  width:100%;height:62px;border:1.5px solid var(--line);border-radius:18px;background:#F8FAFD;
+  padding:24px 52px 6px 44px;padding-inline-start:52px;padding-inline-end:44px;
+  font:inherit;font-size:16px;font-weight:700;color:var(--ink);outline:none;transition:.2s;
+  -webkit-appearance:none;appearance:none;
+}
+.field label{
+  position:absolute;inset-inline-start:52px;top:19px;font-size:15px;font-weight:500;color:var(--muted);
+  pointer-events:none;transition:.18s ease;max-width:calc(100% - 100px);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.field input:focus + label,.field input:not(:placeholder-shown) + label{top:9px;font-size:11.5px;font-weight:700;color:var(--goldd)}
+.field input:focus{border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px rgba(201,162,75,.18)}
+.field .ico{position:absolute;inset-inline-start:16px;top:19px;width:24px;height:24px;color:#8A97AD;transition:.2s;pointer-events:none}
+.field:focus-within .ico{color:var(--gold)}
+.field .st{position:absolute;inset-inline-end:14px;top:19px;width:24px;height:24px;opacity:0;transform:scale(.6);transition:.25s;pointer-events:none}
+.field .st.good{color:var(--ok)} .field .st.bad{color:var(--bad)}
+.field.valid .st.good,.field.invalid .st.bad{opacity:1;transform:none}
+.field.valid input{border-color:#9AD3C0}
+.field.invalid input{border-color:#E8A8A0;background:#FFF8F7}
+.field.shake{animation:shake .38s}
+@keyframes shake{20%,60%{transform:translateX(6px)}40%,80%{transform:translateX(-6px)}}
+.hint{font-size:12.5px;margin:6px 8px 0;min-height:18px;color:var(--muted);transition:.2s}
+.field.invalid .hint{color:var(--bad)}
+.field.valid .hint{color:var(--ok)}
+
+.alert{display:flex;gap:10px;align-items:flex-start;background:#FFF3F1;border:1px solid #F4C7C1;color:#8A1C12;border-radius:16px;padding:12px 14px;margin-bottom:16px;font-size:14px;font-weight:500}
+.alert svg{flex:none;width:20px;height:20px;margin-top:2px}
+
+.btn{
+  width:100%;min-height:58px;border:0;border-radius:18px;cursor:pointer;font:inherit;font-weight:800;font-size:17px;color:#fff;
+  background:linear-gradient(135deg,#0B1F3A,#17407A);box-shadow:0 14px 26px -12px rgba(11,31,58,.75);
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .12s,opacity .2s;
+}
+.btn svg{width:22px;height:22px;color:var(--gold2)}
+.btn:active{transform:scale(.985)}
+.btn[disabled]{opacity:.75;cursor:wait}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.3);border-top-color:var(--gold2);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.note{text-align:center;font-size:12.5px;color:var(--muted);margin:14px 0 0}
+
+.center{text-align:center;padding:10px 4px}
+.badge{width:92px;height:92px;margin:6px auto 14px;display:block}
+.center h2{margin:0 0 6px;font-size:22px;font-weight:800;color:var(--navy)}
+.center p{margin:0 0 6px;color:#4A5873;font-size:15px}
+.receipt{margin:18px 0 6px;border:1px dashed #D9C690;border-radius:20px;background:#FFFCF4;padding:6px 16px;text-align:start}
+.receipt .row{padding:11px 0;border-bottom:1px solid #F0E6C8}
+.receipt .row:last-child{border-bottom:0}
+.receipt span{display:block;font-size:11.5px;color:var(--goldd);font-weight:700}
+.receipt b{display:block;font-size:15px;color:var(--navy);word-break:break-word}
+.receipt b.ltr{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.tick{stroke-dasharray:60;stroke-dashoffset:60;animation:draw .6s .25s ease forwards}
+.ring{stroke-dasharray:290;stroke-dashoffset:290;animation:draw .8s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.loader{display:flex;flex-direction:column;align-items:center;gap:14px;padding:34px 0;color:var(--muted)}
+.loader .spin{width:38px;height:38px;border-width:4px;border-color:#EADBB3;border-top-color:var(--gold)}
+.foot{text-align:center;color:#9AA4B5;font-size:12px;margin-top:18px}
+@media(min-width:768px){.hero{padding-bottom:110px}.hero h1{font-size:30px}.card{padding:34px 36px}.wrap{max-width:560px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="logo-pill" id="logoBox">
+    <img id="logoImg" src="https://hicit.sha.edu.eg/assets/img/logo.png" alt="شعار الجامعة">
+  </div>
+  <h1>تسجيل حضور المراجعة</h1>
+  <p>المعهد العالي للحاسبات وتكنولوجيا المعلومات</p>
+  <div class="gold-rule"></div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+
+    <div id="view-loading" class="loader">
+      <div class="spin"></div><div>جاري التحقق من رمز المراجعة...</div>
+    </div>
+
+    <form id="view-form" hidden autocomplete="on" novalidate>
+      <div class="session">
+        <div class="txt">
+          <div class="course" id="course">—</div>
+          <div class="lec" id="lecture">—</div>
+        </div>
+        <div class="timer" id="timer">--:--<small>المتبقي</small></div>
+      </div>
+      <div class="bar"><i id="barFill"></i></div>
+
+      <div class="rules">
+        <span>الاسم رباعي</span>
+        <span>الكود 9 أرقام بالضبط</span>
+        <span>تسجيل واحد لكل جهاز</span>
+      </div>
+
+      <div class="alert" id="alertBox" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+        <div id="alertMsg"></div>
+      </div>
+
+      <div class="field" id="f-name">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+        <input id="name" name="name" type="text" placeholder=" " autocomplete="name" enterkeyhint="next" maxlength="100">
+        <label for="name">الاسم رباعي كما في الكارنيه</label>
+        <svg class="st good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" opacity=".14"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+        <svg class="st bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" opacity=".14"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        <div class="hint" id="h-name">اكتب 4 أسماء على الأقل بدون أرقام</div>
+      </div>
+
+      <div class="field" id="f-id">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M6.5 16c.6-1.4 1.5-2 2.5-2s1.9.6 2.5 2M14.5 10h4M14.5 13.5h3"/></svg>
+        <input id="sid" name="sid" type="text" inputmode="numeric" pattern="[0-9]*" placeholder=" " autocomplete="off" enterkeyhint="done" maxlength="9">
+        <label for="sid">الرقم الجامعي (9 أرقام)</label>
+        <svg class="st good" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" opacity=".14"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+        <svg class="st bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" opacity=".14"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        <div class="hint" id="h-id">0 / 9 أرقام</div>
+      </div>
+
+      <button class="btn" id="submitBtn" type="submit">
+        <span>تسجيل الحضور</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </button>
+      <p class="note">أي إزعاج داخل المدرج يؤدي للاستبعاد الفوري من كشف الحضور</p>
+    </form>
+
+    <div id="view-success" class="center" hidden>
+      <svg class="badge" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" fill="#EAF6F2"/>
+        <circle class="ring" cx="50" cy="50" r="46" stroke="#1F8A70" stroke-width="4" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+        <path class="tick" d="M30 52l14 14 27-30" stroke="#1F8A70" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h2 id="okTitle">تم تسجيل حضورك</h2>
+      <p id="okSub">يمكنك الآن إغلاق هذه الصفحة.</p>
+      <div class="receipt">
+        <div class="row"><span>الاسم</span><b id="r-name">—</b></div>
+        <div class="row"><span>البريد الجامعي</span><b class="ltr" id="r-mail">—</b></div>
+        <div class="row"><span>وقت التسجيل</span><b class="ltr" id="r-time">—</b></div>
+      </div>
+    </div>
+
+    <div id="view-error" class="center" hidden>
+      <svg class="badge" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" fill="#FFF1EF"/>
+        <circle cx="50" cy="50" r="46" stroke="#E4A19A" stroke-width="2"/>
+        <path d="M50 28v28M50 70v.01" stroke="#B42318" stroke-width="7" stroke-linecap="round"/>
+      </svg>
+      <h2 id="errTitle">تعذّر التسجيل</h2>
+      <p id="errMsg"></p>
+      <div style="margin-top:18px" id="errActions"></div>
+    </div>
+
+  </section>
+  <div class="foot">أكاديمية الشروق · نظام حضور المراجعات</div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getFirestore, doc, getDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCUwRX-2GfbA-yjWR-oJSkde30bZBc453s",
+  authDomain: "student-absences-47a40.firebaseapp.com",
+  projectId: "student-absences-47a40",
+  storageBucket: "student-absences-47a40.firebasestorage.app",
+  messagingSenderId: "153637902159",
+  appId: "1:153637902159:web:f6cab30f91cd7c95dd173a"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+const urlParams = new URLSearchParams(window.location.search);
+const SID = urlParams.get('s') || '';
+const TOKEN = urlParams.get('t') || '';
+
+const state = { session: null, deadline: 0, total: 1, timer: null, sending: false, done: false };
+
+$('logoImg').addEventListener('error', () => { $('logoBox').innerHTML = '<span class="mono">ش</span>'; });
+
+function show(v) {
+  ['loading', 'form', 'success', 'error'].forEach(x => { $('view-' + x).hidden = (x !== v); });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function showAlert(msg) { $('alertMsg').textContent = msg || ''; $('alertBox').hidden = !msg; }
+function showError(title, msg, canRetry = false) {
+  clearInterval(state.timer);
+  $('errTitle').textContent = title;
+  $('errMsg').textContent = msg;
+  const box = $('errActions'); box.innerHTML = '';
+  if (canRetry) {
+    const b = document.createElement('button');
+    b.className = 'btn'; b.type = 'button'; b.textContent = 'إعادة المحاولة';
+    b.onclick = () => location.reload();
+    box.appendChild(b);
+  }
+  show('error');
+}
+
+function normDigits(s) {
+  return String(s || '')
+    .replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0));
+}
+function cleanName(s) {
+  return String(s || '').replace(/[\u200B-\u200F\u202A-\u202E\uFEFF]/g, '').replace(/[()\[\]{}]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function fmtOracleTime(d) {
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getMonth() + 1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function validQrToken(session, token) {
+  const iv = Number(session.qrIntervalSec) || 0;
+  if (iv === 0) return token === (await sha256Hex(session.id + ':static:' + session.secret)).slice(0, 10);
+  const w = Math.floor(Date.now() / (iv * 1000));
+  for (let i = 0; i <= 1; i++) {
+    const expected = (await sha256Hex(`${session.id}:${w - i}:${session.secret}`)).slice(0, 10);
+    if (token === expected) return true;
+  }
+  return false;
+}
+
+function getBrowserId() {
+  const key = 'sha_rev_browser_v1';
+  let id = localStorage.getItem(key);
+  if (!/^[a-f0-9]{32}$/.test(id || '')) {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    id = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    localStorage.setItem(key, id);
+  }
+  if (localStorage.getItem(key) !== id) throw new Error('storage_blocked');
+  return id;
+}
+
+function setField(id, ok, msg) {
+  const f = $('f-' + id);
+  f.classList.toggle('valid', ok === true);
+  f.classList.toggle('invalid', ok === false);
+  if (msg !== undefined) $('h-' + id).textContent = msg;
+}
+function shake(id) { const f = $('f-' + id); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); }
+
+function vName(showErr) {
+  const v = cleanName($('name').value);
+  if (!v) { setField('name', showErr ? false : null, showErr ? 'اكتب الاسم رباعي كما في الكارنيه' : 'اكتب 4 أسماء على الأقل بدون أرقام'); return false; }
+  if (/[0-9\u0660-\u0669\u06F0-\u06F9]/.test(v)) { setField('name', false, 'الاسم لا يجب أن يحتوي على أرقام'); return false; }
+  if (!/^[\u0600-\u06FFa-zA-Z .'\-]+$/.test(v)) { setField('name', false, 'يوجد رموز غير مسموحة في الاسم'); return false; }
+  const parts = v.split(' ').filter(Boolean);
+  if (parts.length < 4) {
+    setField('name', showErr ? false : null, `كتبت ${parts.length} من 4 أسماء — مطلوب الاسم رباعي`);
+    return false;
+  }
+  setField('name', true, 'الاسم رباعي صحيح ✓');
+  return true;
+}
+
+function vId(showErr) {
+  const v = normDigits($('sid').value).replace(/\D/g, '').slice(0, 9);
+  $('sid').value = v;
+  if (!v) { setField('id', showErr ? false : null, showErr ? 'اكتب الرقم الجامعي (9 أرقام)' : '0 / 9 أرقام'); return false; }
+  if (v.length !== 9) {
+    setField('id', showErr ? false : null, `${v.length} / 9 أرقام — لازم 9 أرقام بالضبط`);
+    return false;
+  }
+  setField('id', true, '9 / 9 أرقام ✓');
+  return true;
+}
+
+$('name').addEventListener('input', () => { try{localStorage.setItem('draft_name', $('name').value)}catch{}; vName(false); });
+$('name').addEventListener('blur', () => { if ($('name').value) vName(true); });
+$('sid').addEventListener('input', () => { vId(false); try{localStorage.setItem('draft_id', $('sid').value)}catch{}; });
+$('sid').addEventListener('blur', () => { if ($('sid').value) vId(true); });
+$('name').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('sid').focus(); } });
+
+function tick() {
+  if (state.done) return;
+  const rem = Math.max(0, Math.ceil((state.deadline - Date.now()) / 1000));
+  const m = String(Math.floor(rem / 60)).padStart(2, '0');
+  const s = String(rem % 60).padStart(2, '0');
+  $('timer').innerHTML = `${m}:${s}<small>المتبقي</small>`;
+  $('timer').classList.toggle('low', rem <= 30);
+  $('barFill').style.width = Math.min(100, Math.max(0, (rem / state.total) * 100)) + '%';
+  if (rem <= 0) {
+    clearInterval(state.timer);
+    if (!state.sending) showError('انتهى وقت التسجيل', 'انتهى وقت التسجيل لهذه المراجعة.');
+  }
+}
+
+async function init() {
+  if (!SID || !TOKEN) {
+    showError('رابط غير صحيح', 'امسح رمز QR الظاهر على شاشة المدرج لفتح صفحة التسجيل.');
+    return;
+  }
+  try {
+    const snap = await getDoc(doc(db, 'sessions', SID));
+    if (!snap.exists()) { showError('رابط غير صحيح', 'هذه الجلسة غير موجودة.'); return; }
+    const sess = { id: snap.id, ...snap.data() };
+    if (sess.status !== 'OPEN' || Date.now() >= sess.closesMs) {
+      showError('التسجيل مغلق', 'انتهى وقت التسجيل لهذه المراجعة.'); return;
+    }
+    const valid = await validQrToken(sess, TOKEN);
+    if (!valid) {
+      showError('انتهت صلاحية الرمز', 'امسح رمز QR الجديد الظاهر على شاشة المدرج الآن.'); return;
+    }
+    state.session = sess;
+    state.deadline = sess.closesMs;
+    state.total = Math.max(1, Math.round((sess.closesMs - sess.openedMs) / 1000));
+    $('course').textContent = sess.course || '—';
+    $('lecture').textContent = sess.title || 'مراجعة';
+    try {
+      const dn = localStorage.getItem('draft_name'); if (dn) { $('name').value = dn; vName(false); }
+      const di = localStorage.getItem('draft_id'); if (di) { $('sid').value = di; vId(false); }
+    } catch {}
+    show('form');
+    tick();
+    state.timer = setInterval(tick, 1000);
+  } catch (err) {
+    console.error(err);
+    showError('تعذّر الاتصال', 'تأكد من اتصالك بالإنترنت ثم أعد المحاولة.', true);
+  }
+}
+
+const origBtn = $('submitBtn').innerHTML;
+function setBusy(b) {
+  state.sending = b;
+  $('submitBtn').disabled = b;
+  $('name').disabled = b;
+  $('sid').disabled = b;
+  $('submitBtn').innerHTML = b ? '<div class="spin"></div><span>جارٍ التسجيل...</span>' : origBtn;
+}
+
+$('view-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (state.sending || state.done) return;
+  showAlert('');
+  if (!vName(true)) { shake('name'); $('name').focus(); return; }
+  if (!vId(true)) { shake('id'); $('sid').focus(); return; }
+
+  let browserId;
+  try { browserId = getBrowserId(); }
+  catch {
+    showAlert('المتصفح يمنع حفظ البيانات. افتح الرابط في Chrome أو Safari العادي (وليس التصفح الخفي) وحاول مرة أخرى.');
+    return;
+  }
+
+  setBusy(true);
+  try {
+    const name = cleanName($('name').value);
+    const studentId = $('sid').value;
+    const displayName = `${name} ( ${studentId} )`;
+    const email = `${studentId}@sha.edu.eg`;
+    const timeStr = fmtOracleTime(new Date());
+
+    // فحص سريع لحالة الجلسة والـQR قبل الكتابة
+    const sessSnap = await getDoc(doc(db, 'sessions', SID));
+    if (!sessSnap.exists()) throw new Error('CLOSED');
+    const sess = { id: sessSnap.id, ...sessSnap.data() };
+    if (sess.status !== 'OPEN' || Date.now() >= sess.closesMs) throw new Error('CLOSED');
+    if (!(await validQrToken(sess, TOKEN))) throw new Error('QR_EXPIRED');
+
+    const attRef = doc(db, 'sessions', SID, 'attendance', studentId);
+    const brRef = doc(db, 'sessions', SID, 'browsers', browserId);
+
+    const outcome = await runTransaction(db, async tx => {
+      const [attSnap, brSnap] = await Promise.all([tx.get(attRef), tx.get(brRef)]);
+      if (attSnap.exists()) {
+        const data = attSnap.data();
+        if (data.status === 'EXCLUDED') return { err: 'EXCLUDED', reason: data.excludeReason };
+        if (data.browserId === browserId) return { already: true, data };
+        return { err: 'DUPLICATE' };
+      }
+      if (brSnap.exists()) {
+        const bdata = brSnap.data();
+        if (bdata.studentId !== studentId) return { err: 'BROWSER_USED' };
+      }
+      const record = {
+        studentId, name, displayName, email, timeStr, browserId,
+        status: 'ACTIVE', excludeReason: '',
+        createdAt: serverTimestamp(), createdMs: Date.now()
+      };
+      tx.set(attRef, record);
+      tx.set(brRef, { studentId, createdMs: Date.now() });
+      return { ok: true, data: record };
+    });
+
+    if (outcome.err === 'EXCLUDED') {
+      setBusy(false);
+      showError('تم استبعادك من المراجعة', `لا يمكنك إعادة التسجيل. السبب: ${outcome.reason || 'مخالفة قواعد المدرج'}.`);
+      return;
+    }
+    if (outcome.err === 'DUPLICATE') {
+      setBusy(false);
+      showAlert('هذا الرقم الجامعي مسجّل بالفعل في هذه المراجعة.');
+      return;
+    }
+    if (outcome.err === 'BROWSER_USED') {
+      setBusy(false);
+      showAlert('تم استخدام هذا الجهاز لتسجيل طالب آخر في هذه المراجعة بالفعل.');
+      return;
+    }
+
+    state.done = true;
+    clearInterval(state.timer);
+    setBusy(false);
+    try { localStorage.removeItem('draft_name'); localStorage.removeItem('draft_id'); } catch {}
+    const d = outcome.data;
+    $('okTitle').textContent = outcome.already ? 'تم تسجيلك بالفعل' : 'تم تسجيل حضورك';
+    $('okSub').textContent = outcome.already ? 'أنت مسجّل مسبقاً في هذه المراجعة.' : 'تذكّر: أي إزعاج داخل المدرج يؤدي للاستبعاد الفوري.';
+    $('r-name').textContent = d.displayName;
+    $('r-mail').textContent = d.email;
+    $('r-time').textContent = d.timeStr;
+    show('success');
+  } catch (err) {
+    setBusy(false);
+    if (err.message === 'CLOSED') showError('انتهى وقت التسجيل', 'انتهى وقت التسجيل لهذه المراجعة.');
+    else if (err.message === 'QR_EXPIRED') showError('انتهت صلاحية الرمز', 'انتهت صلاحية الرمز. امسح الـQR الجديد من الشاشة.');
+    else {
+      console.error(err);
+      showAlert('حصل خطأ في الاتصال، اضغط تسجيل مرة أخرى.');
+    }
+  }
+});
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1F3A">
+<title>لوحة المعيد — حضور المراجعات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<style>
+:root{--navy:#0B1F3A;--navy2:#17407A;--gold:#C9A24B;--gold2:#E8C873;--goldd:#9A7A2E;--bg:#F5F2EA;--ink:#14213D;--muted:#7A879C;--line:#DCE2EC;--ok:#1F8A70;--bad:#B42318;--badbg:#FEF2F2}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{font-family:'Tajawal','Cairo',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.55}
+button{font:inherit;cursor:pointer}
+svg{display:block}
+
+.top{position:sticky;top:0;z-index:20;background:linear-gradient(160deg,#0B1F3A,#10305C);color:#fff;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;box-shadow:0 8px 24px -12px rgba(11,31,58,.7)}
+.top .in{max-width:1180px;margin:auto;display:flex;align-items:center;gap:12px}
+.pill{background:#fff;border-radius:14px;padding:6px 10px;display:flex;align-items:center;min-width:46px;min-height:42px;justify-content:center}
+.pill img{height:30px;max-width:120px;object-fit:contain}
+.top h1{margin:0;font-size:17px;font-weight:800;flex:1}
+.top h1 small{display:block;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.72)}
+.iconbtn{width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;justify-content:center}
+.iconbtn svg{width:22px;height:22px}
+.tabs{max-width:1180px;margin:10px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:6px;background:rgba(255,255,255,.1);padding:4px;border-radius:16px}
+.tabs button{border:0;border-radius:12px;background:transparent;color:rgba(255,255,255,.8);padding:10px;font-weight:700;font-size:14.5px;min-height:44px}
+.tabs button.on{background:#fff;color:var(--navy)}
+
+.container{max-width:1180px;margin:18px auto 40px;padding:0 14px 60px}
+.card{background:#fff;border-radius:24px;padding:20px;border:1px solid rgba(201,162,75,.2);box-shadow:0 18px 40px -24px rgba(11,31,58,.45);margin-bottom:16px}
+.card h2{margin:0 0 4px;font-size:19px;font-weight:800;color:var(--navy)}
+.card .sub{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(120% 120% at 80% -10%,rgba(55,110,190,.5),transparent 55%),linear-gradient(160deg,#0B1F3A,#10305C)}
+.login .box{width:100%;max-width:400px;background:#fff;border-radius:28px;padding:28px 22px;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.login .pill{display:inline-flex;border:1px solid #eee;margin-bottom:10px}
+.login .pill img{height:48px}
+.login h2{margin:6px 0 4px;color:var(--navy);font-size:22px}
+.login p{margin:0 0 20px;color:var(--muted);font-size:14px}
+
+.field{position:relative;margin-bottom:14px;text-align:start}
+.field input{width:100%;height:58px;border:1.5px solid var(--line);border-radius:16px;background:#F8FAFD;padding:22px 16px 6px;font:inherit;font-size:15.5px;font-weight:700;color:var(--ink);outline:none;transition:.2s}
+.field label{position:absolute;inset-inline-start:16px;top:8px;font-size:11.5px;font-weight:700;color:var(--goldd);pointer-events:none}
+.field input:focus{border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px rgba(201,162,75,.18)}
+.field .msg{color:var(--bad);font-size:12.5px;margin:5px 8px 0;min-height:16px}
+
+.lbl{font-size:12.5px;font-weight:700;color:var(--goldd);margin:4px 4px 6px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 16px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:9px 14px;min-height:42px;font-weight:700;font-size:14px;color:var(--ink)}
+.chip.on{border-color:var(--gold);background:linear-gradient(135deg,#FCF8EC,#F5EDD6);color:var(--navy);box-shadow:0 0 0 3px rgba(201,162,75,.15)}
+
+.btn{min-height:52px;border:0;border-radius:16px;font-weight:800;font-size:15.5px;color:#fff;padding:0 18px;background:linear-gradient(135deg,#0B1F3A,#17407A);box-shadow:0 14px 26px -12px rgba(11,31,58,.7);display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,opacity .2s;width:100%}
+.btn svg{width:20px;height:20px;color:var(--gold2)}
+.btn:active{transform:scale(.985)}
+.btn.sm{min-height:44px;font-size:14px;padding:0 14px;width:auto;border-radius:13px;box-shadow:none}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost svg{color:var(--goldd)}
+.btn.danger{background:#fff;color:var(--bad);border:1.5px solid #F0B8B1;box-shadow:none}
+.btn.danger-fill{background:linear-gradient(135deg,#B42318,#DC2626);color:#fff;box-shadow:0 10px 20px -10px rgba(180,35,24,.7)}
+.btn.gold{background:linear-gradient(135deg,#C9A24B,#E8C873);color:#2A1F00;box-shadow:0 12px 22px -12px rgba(154,122,46,.8)}
+.btn.gold svg{color:#2A1F00}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.row>.btn{flex:1 1 140px}
+
+.live{display:grid;grid-template-columns:minmax(0,370px) 1fr;gap:16px;align-items:start}
+@media(max-width:880px){.live{grid-template-columns:1fr}}
+.qrcard{text-align:center}
+.status{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:13.5px;padding:6px 14px;border-radius:999px}
+.status.open{background:#E7F6F1;color:var(--ok)} .status.closed{background:#FDECEA;color:var(--bad)}
+.status i{width:9px;height:9px;border-radius:50%;background:currentColor;animation:pulse 1.4s infinite}
+.status.closed i{animation:none}
+@keyframes pulse{50%{opacity:.3;transform:scale(.7)}}
+.qrbox{margin:14px auto 10px;width:min(100%,300px);aspect-ratio:1;background:#fff;border:1px solid #EADBB3;border-radius:22px;padding:12px;display:flex;align-items:center;justify-content:center;position:relative}
+.qrbox canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+.qrbox .closed{position:absolute;inset:0;border-radius:22px;background:rgba(255,255,255,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--bad);font-weight:800}
+.qrnote{font-size:13px;color:var(--muted)}
+.qrbar{height:5px;border-radius:5px;background:#EFE4C3;margin:8px 10px 0;overflow:hidden}
+.qrbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1s linear}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 14px}
+.stat{background:linear-gradient(160deg,#FCF8EC,#F6EED8);border:1px solid #EADBB3;border-radius:18px;padding:12px 8px;text-align:center}
+.stat b{display:block;font-size:28px;line-height:1.1;color:var(--navy);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--goldd);font-weight:700}
+.stat.bad{background:#FEF2F2;border-color:#FECACA}
+.stat.bad b,.stat.bad span{color:var(--bad)}
+
+.rec{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #F0EADA}
+.rec .n{width:34px;height:34px;border-radius:11px;background:#F4EFE0;color:var(--goldd);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.rec .nm{font-weight:700;font-size:14.5px}
+.rec .meta{font-size:12px;color:var(--muted);direction:ltr;text-align:start}
+.rec .exbtn{border:1px solid #F0B8B1;background:#FFF5F5;color:var(--bad);border-radius:10px;padding:6px 12px;font-weight:800;font-size:13px}
+.rec .resbtn{border:1px solid #A7F3D0;background:#ECFDF5;color:var(--ok);border-radius:10px;padding:6px 12px;font-weight:800;font-size:13px}
+.badge-reason{display:inline-block;background:#FEE2E2;color:#991B1B;border-radius:8px;padding:2px 8px;font-size:12px;font-weight:800;margin-top:3px}
+.empty{text-align:center;color:var(--muted);padding:20px 8px;font-size:14px}
+.scroll-list{max-height:430px;overflow-y:auto;padding-inline-end:4px}
+
+/* ===== شاشة الداتا شو (المسجلين شمال — المستبعدين يمين) ===== */
+.proj{position:fixed;inset:0;z-index:60;background:linear-gradient(160deg,#08172B,#0F2B52);color:#fff;display:flex;flex-direction:column;padding:16px 22px}
+.proj-head{display:flex;align-items:center;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.14)}
+.proj-head .pill img{height:34px}
+.proj-head .titles{flex:1}
+.proj-head h2{margin:0;font-size:clamp(18px,2.2vw,28px);color:#fff}
+.proj-head p{margin:0;color:var(--gold2);font-size:clamp(13px,1.4vw,17px)}
+.proj-head .kpis{display:flex;gap:14px;align-items:center}
+.proj-head .kpi{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:6px 16px;text-align:center;font-variant-numeric:tabular-nums}
+.proj-head .kpi b{display:block;font-size:clamp(20px,2.4vw,30px);line-height:1.1}
+.proj-head .kpi span{font-size:11px;color:rgba(255,255,255,.75)}
+.proj-head .kpi.red{background:rgba(220,38,38,.22);border-color:rgba(248,113,113,.45)}
+
+/* اتجاه LTR للشبكة عشان نضمن اليمين للمستبعدين والشمال للمسجلين بدقة */
+.proj-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:14px;direction:ltr}
+.proj-grid.with-qr{grid-template-columns:320px 1fr 340px}
+.proj-col{direction:rtl;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px 16px;display:flex;flex-direction:column;min-height:0}
+.proj-col h3{margin:0 0 10px;font-size:18px;display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.12)}
+.proj-col.excl{background:rgba(180,35,24,.14);border-color:rgba(248,113,113,.35)}
+.proj-col.excl h3{color:#FCA5A5}
+.proj-col.reg h3{color:#6EE7B7}
+.proj-scroll{flex:1;overflow-y:auto;padding-inline-end:4px}
+
+.pj-item{background:rgba(255,255,255,.08);border-radius:14px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;animation:rise .3s both}
+.pj-item .nm{font-weight:800;font-size:clamp(14px,1.35vw,18px)}
+.pj-item .id{font-size:13px;color:rgba(255,255,255,.7);direction:ltr}
+.pj-excl-item{background:rgba(220,38,38,.25);border:1px solid rgba(248,113,113,.45);border-radius:14px;padding:12px 14px;margin-bottom:10px;animation:rise .35s both}
+.pj-excl-item .nm{font-weight:800;font-size:clamp(15px,1.4vw,19px);color:#fff}
+.pj-excl-item .rs{display:inline-block;margin-top:5px;background:#DC2626;color:#fff;padding:3px 10px;border-radius:8px;font-size:13px;font-weight:800}
+
+.pj-qr-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.pj-qr-box{background:#fff;border-radius:20px;padding:12px;width:100%;max-width:270px;aspect-ratio:1}
+.pj-qr-box canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+
+/* ===== التنبيه الكبير للاستبعاد ===== */
+.excl-overlay{position:fixed;inset:0;z-index:100;background:rgba(127,29,29,.95);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;animation:popIn .35s cubic-bezier(.2,.9,.3,1.1) both}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.excl-overlay .tag-top{background:#fff;color:#991B1B;font-weight:800;font-size:clamp(18px,2.2vw,28px);padding:8px 26px;border-radius:999px;margin-bottom:22px}
+.excl-overlay .big-name{font-size:clamp(34px,5.5vw,72px);font-weight:800;color:#fff;line-height:1.2;margin:0 0 18px;text-shadow:0 8px 30px rgba(0,0,0,.4)}
+.excl-overlay .big-reason{font-size:clamp(22px,3vw,40px);font-weight:800;color:#FEF08A;background:rgba(0,0,0,.3);padding:12px 32px;border-radius:20px;border:2px solid rgba(254,240,138,.5)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* نافذة اختيار سبب الاستبعاد */
+.modal{position:fixed;inset:0;z-index:90;background:rgba(8,18,35,.6);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal .m{background:#fff;border-radius:26px;padding:24px;width:100%;max-width:420px;animation:rise .25s both}
+.modal h3{margin:0 0 4px;color:var(--navy);font-size:19px}
+.modal p{margin:0 0 16px;color:#4A5873;font-size:14.5px}
+.reasons-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.r-btn{border:2px solid #FECACA;background:#FEF2F2;color:#991B1B;border-radius:16px;padding:14px 10px;font-weight:800;font-size:15.5px;transition:.15s}
+.r-btn:hover,.r-btn:active{background:#DC2626;color:#fff;border-color:#DC2626}
+
+.hist{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid #EFE6CB;border-radius:18px;margin-bottom:10px;background:#FFFDF8;width:100%;text-align:start}
+.hist .tx{flex:1;min-width:0} .hist b{display:block;color:var(--navy)} .hist small{color:var(--muted);direction:ltr;display:block;text-align:start}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0B1F3A;color:#fff;border-radius:14px;padding:11px 18px;font-size:14px;z-index:110;box-shadow:0 14px 30px -10px rgba(0,0,0,.5)}
+.toast.bad{background:var(--bad)}
+</style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <form class="box" id="loginForm">
+    <div class="pill"><img src="https://hicit.sha.edu.eg/assets/img/logo.png" alt="" onerror="this.parentNode.innerHTML='<b style=color:#0B1F3A>ش</b>'"></div>
+    <h2>لوحة المعيد — المراجعات</h2>
+    <p>أدخل كلمة المرور للتحكم في المدرج</p>
+    <div class="field">
+      <input id="pw" type="password" autocomplete="current-password" placeholder=" ">
+      <label for="pw">كلمة المرور</label>
+      <div class="msg" id="pwMsg"></div>
+    </div>
+    <button class="btn" type="submit">دخول</button>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="in">
+      <div class="pill"><img src="https://hicit.sha.edu.eg/assets/img/logo.png" alt=""></div>
+      <h1>لوحة حضور المراجعات<small>اتصال مباشر لحظي — Firebase</small></h1>
+      <button class="iconbtn" id="logoutBtn" title="خروج"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
+    </div>
+    <div class="tabs">
+      <button id="tabLive" class="on" type="button">الجلسة الحالية</button>
+      <button id="tabHist" type="button">السجل والتصدير</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="paneLive">
+      <div id="startPanel" class="card" style="max-width:580px;margin-inline:auto">
+        <h2>بدء مراجعة جديدة</h2>
+        <p class="sub">حدد اسم المادة، ومدة التسجيل، ومدة تجديد الـQR بشكل منفصل.</p>
+
+        <div class="field">
+          <input id="courseInput" type="text" placeholder=" " value="مراجعة عامة">
+          <label for="courseInput">اسم المادة</label>
+        </div>
+        <div class="field">
+          <input id="titleInput" type="text" placeholder=" " value="المراجعة الأولى — مدرج 1">
+          <label for="titleInput">عنوان المراجعة / المدرج</label>
+        </div>
+
+        <span class="lbl">1) مدة فتح التسجيل</span>
+        <div class="chips" id="durChips">
+          <button type="button" class="chip" data-d="5">5 دقائق</button>
+          <button type="button" class="chip on" data-d="10">10 دقائق</button>
+          <button type="button" class="chip" data-d="15">15 دقيقة</button>
+          <button type="button" class="chip" data-d="20">20 دقيقة</button>
+        </div>
+
+        <span class="lbl">2) مدة تجديد رمز QR (تُحدد حسب سرعة الجهاز والنت)</span>
+        <div class="chips" id="qrChips">
+          <button type="button" class="chip" data-q="30">كل 30 ثانية</button>
+          <button type="button" class="chip on" data-q="60">كل دقيقة</button>
+          <button type="button" class="chip" data-q="120">كل دقيقتين</button>
+          <button type="button" class="chip" data-q="0">ثابت طول الجلسة</button>
+        </div>
+
+        <button class="btn" id="openBtn" type="button">فتح التسجيل وإظهار QR</button>
+      </div>
+
+      <div id="livePanel" class="live" hidden>
+        <div class="card qrcard">
+          <span class="status open" id="stPill"><i></i><span id="stTxt">التسجيل مفتوح</span></span>
+          <div class="qrbox">
+            <canvas id="qrCanvas"></canvas>
+            <div class="closed" id="qrClosed" hidden><span>تم إغلاق التسجيل</span></div>
+          </div>
+          <div class="qrnote" id="qrNote">يتجدد الرمز بعد <b id="qrSec">--</b> ث</div>
+          <div class="qrbar"><i id="qrFill"></i></div>
+          <div class="row" style="margin-top:14px">
+            <button class="btn gold sm" id="projBtn" type="button" style="flex:1 1 100%;width:100%">شاشة الداتا شو (الأسماء + الاستبعاد)</button>
+            <button class="btn ghost sm" id="copyBtn" type="button">نسخ رابط الطالب</button>
+            <button class="btn ghost sm" id="testBtn" type="button">فتح كطالب</button>
+          </div>
+          <div class="row" style="margin-top:10px" id="ctrlOpen">
+            <button class="btn danger sm" id="closeBtn" type="button">إغلاق التسجيل الآن</button>
+            <button class="btn ghost sm" id="extBtn" type="button">+ 3 دقائق</button>
+          </div>
+          <div class="row" style="margin-top:10px" id="ctrlClosed" hidden>
+            <button class="btn sm" id="exportLiveBtn" type="button" style="flex:1 1 100%">تصدير CSV لـ Oracle</button>
+            <button class="btn ghost sm" id="reopenBtn" type="button">إعادة فتح +3 د</button>
+            <button class="btn ghost sm" id="newBtn" type="button">مراجعة جديدة</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div style="font-size:18px;font-weight:800;color:var(--navy)" id="lvCourse">—</div>
+            <div style="color:var(--goldd);font-size:13.5px" id="lvTitle">—</div>
+            <div class="stats">
+              <div class="stat"><b id="stCount">0</b><span>حاضر فعلي</span></div>
+              <div class="stat"><b id="stTimer">--:--</b><span>المتبقي</span></div>
+              <div class="stat bad"><b id="stExcl">0</b><span>مستبعد</span></div>
+            </div>
+            <div class="field" style="margin-bottom:8px">
+              <input id="liveSearch" type="search" placeholder=" ">
+              <label for="liveSearch">ابحث بالاسم أو الكود لاستبعاد طالب فوراً...</label>
+            </div>
+            <div class="scroll-list" id="liveList"><div class="empty">في انتظار تسجيل الطلاب...</div></div>
+          </div>
+
+          <div class="card" id="exclCard" hidden>
+            <h2 style="color:var(--bad);font-size:16px">قائمة المستبعدين في هذه المراجعة</h2>
+            <div class="scroll-list" id="exclList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="paneHist" hidden>
+      <div class="card">
+        <h2>المراجعات السابقة</h2>
+        <p class="sub">اضغط على أي مراجعة لفتحها أو تصدير ملف Oracle الخاص بها.</p>
+        <div id="histItems"><div class="empty">جاري التحميل...</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- شاشة الداتا شو -->
+<div class="proj" id="proj" hidden>
+  <div class="proj-head">
+    <div class="pill"><img src="https://hicit.sha.edu.eg/assets/img/logo.png" alt=""></div>
+    <div class="titles"><h2 id="pjCourse">—</h2><p id="pjTitle">—</p></div>
+    <div class="kpis">
+      <div class="kpi"><b id="pjCount">0</b><span>حاضر</span></div>
+      <div class="kpi"><b id="pjTimer">--:--</b><span>المتبقي</span></div>
+      <div class="kpi red"><b id="pjExclCount">0</b><span>مستبعد</span></div>
+      <button class="btn ghost sm" id="pjToggleQr" type="button" style="color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)">إخفاء/إظهار QR</button>
+      <button class="btn ghost sm" id="projX" type="button" style="color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)">إغلاق ✕</button>
+    </div>
+  </div>
+  <div class="proj-grid with-qr" id="pjGrid">
+    <!-- عمود الـQR -->
+    <div class="proj-col pj-qr-wrap" id="pjQrCol">
+      <div class="pj-qr-box"><canvas id="pjCanvas"></canvas></div>
+      <p style="margin:12px 0 4px;font-weight:800;color:var(--gold2);font-size:16px">امسح الرمز لتسجيل الحضور</p>
+      <small style="color:rgba(255,255,255,.7)">الاسم رباعي · الكود 9 أرقام</small>
+    </div>
+    <!-- عمود المسجلين (شمال) -->
+    <div class="proj-col reg">
+      <h3><span>المسجلين في المراجعة</span><span id="pjRegBadge">0</span></h3>
+      <div class="proj-scroll" id="pjRegList"></div>
+    </div>
+    <!-- عمود المستبعدين (يمين) -->
+    <div class="proj-col excl">
+      <h3><span>المستبعدين</span><span id="pjExclBadge">0</span></h3>
+      <div class="proj-scroll" id="pjExclList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- التنبيه الكبير عند الاستبعاد -->
+<div class="excl-overlay" id="exclOverlay" hidden>
+  <div class="tag-top">تم استبعاد الطالب من المراجعة</div>
+  <div class="big-name" id="ovName">—</div>
+  <div class="big-reason" id="ovReason">—</div>
+</div>
+
+<!-- نافذة اختيار سبب الاستبعاد -->
+<div class="modal" id="exclModal" hidden>
+  <div class="m">
+    <h3>استبعاد طالب من الغياب</h3>
+    <p id="emStudent">—</p>
+    <div class="reasons-grid">
+      <button type="button" class="r-btn" data-r="مشاغب">مشاغب</button>
+      <button type="button" class="r-btn" data-r="يشتت أصدقائه">يشتت أصدقائه</button>
+      <button type="button" class="r-btn" data-r="بدون أدوات">بدون أدوات</button>
+      <button type="button" class="r-btn" data-r="غير مهذب">غير مهذب</button>
+    </div>
+    <button type="button" class="btn ghost sm" id="emCancel" style="width:100%">إلغاء</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+// كلمة مرور لوحة المعيد (غيّرها كما تشاء)
+const ADMIN_PASS = "1@23@45@6";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCUwRX-2GfbA-yjWR-oJSkde30bZBc453s",
+  authDomain: "student-absences-47a40.firebaseapp.com",
+  projectId: "student-absences-47a40",
+  storageBucket: "student-absences-47a40.firebasestorage.app",
+  messagingSenderId: "153637902159",
+  appId: "1:153637902159:web:f6cab30f91cd7c95dd173a"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+const S = {
+  dur: 10, qrIv: 60, sess: null, records: [], unsub: null, timer: null,
+  lastQrUrl: '', targetStudent: null, seenExcluded: new Set(), initializedExcl: false
+};
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtT(sec) { sec = Math.max(0, Math.floor(sec)); return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`; }
+function toast(msg, bad=false) {
+  const t = document.createElement('div'); t.className = 'toast' + (bad ? ' bad' : ''); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2800);
+}
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function studentBaseUrl() {
+  const u = new URL(window.location.href);
+  u.pathname = u.pathname.replace(/[^/]*$/, 'index.html');
+  u.search = ''; u.hash = '';
+  return u.toString();
+}
+
+/* ---- الدخول ---- */
+$('loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if ($('pw').value === ADMIN_PASS) {
+    sessionStorage.setItem('adm_ok', '1');
+    $('login').hidden = true; $('app').hidden = false;
+  } else { $('pwMsg').textContent = 'كلمة المرور غير صحيحة'; }
+});
+$('logoutBtn').onclick = () => { sessionStorage.removeItem('adm_ok'); location.reload(); };
+if (sessionStorage.getItem('adm_ok') === '1') { $('login').hidden = true; $('app').hidden = false; }
+
+/* ---- التبويبات والإعدادات ---- */
+$('tabLive').onclick = () => { $('tabLive').classList.add('on'); $('tabHist').classList.remove('on'); $('paneLive').hidden = false; $('paneHist').hidden = true; };
+$('tabHist').onclick = () => { $('tabHist').classList.add('on'); $('tabLive').classList.remove('on'); $('paneHist').hidden = false; $('paneLive').hidden = true; loadHistory(); };
+
+$('durChips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  S.dur = Number(b.dataset.d);
+  $('durChips').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b));
+});
+$('qrChips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  S.qrIv = Number(b.dataset.q);
+  $('qrChips').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b));
+});
+
+/* ---- فتح جلسة ---- */
+$('openBtn').onclick = async () => {
+  const course = $('courseInput').value.trim() || 'مراجعة';
+  const title = $('titleInput').value.trim() || 'مدرج';
+  const now = Date.now();
+  const id = 'R' + now;
+  const bytes = new Uint8Array(16); crypto.getRandomValues(bytes);
+  const secret = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  const sess = {
+    id, course, title, status: 'OPEN',
+    openedMs: now, closesMs: now + S.dur * 60000,
+    durationMin: S.dur, qrIntervalSec: S.qrIv, secret
+  };
+  try {
+    await setDoc(doc(db, 'sessions', id), sess);
+    enterSession(sess);
+  } catch (err) {
+    console.error(err);
+    toast('تعذّر فتح الجلسة. تأكد من قواعد Firestore والإنترنت.', true);
+  }
+};
+
+function enterSession(sess) {
+  S.sess = sess; S.lastQrUrl = ''; S.records = [];
+  S.seenExcluded = new Set(); S.initializedExcl = false;
+  $('startPanel').hidden = true; $('livePanel').hidden = false;
+  $('lvCourse').textContent = sess.course; $('lvTitle').textContent = sess.title;
+  $('pjCourse').textContent = sess.course; $('pjTitle').textContent = sess.title;
+
+  if (S.unsub) S.unsub();
+  const q = query(collection(db, 'sessions', sess.id, 'attendance'), orderBy('createdMs', 'desc'));
+  S.unsub = onSnapshot(q, snap => {
+    const list = [];
+    snap.forEach(d => list.push(d.data()));
+    // كشف أي استبعاد جديد لإظهار التنبيه الكبير على الداتا شو
+    if (S.initializedExcl) {
+      list.forEach(r => {
+        if (r.status === 'EXCLUDED' && !S.seenExcluded.has(r.studentId)) {
+          S.seenExcluded.add(r.studentId);
+          triggerBigExclusion(r.name, r.excludeReason);
+        }
+      });
+    } else {
+      list.forEach(r => { if (r.status === 'EXCLUDED') S.seenExcluded.add(r.studentId); });
+      S.initializedExcl = true;
+    }
+    S.records = list;
+    renderLists();
+  });
+
+  clearInterval(S.timer);
+  tickLoop();
+  S.timer = setInterval(tickLoop, 1000);
+}
+
+async function currentQrUrl() {
+  const s = S.sess;
+  const iv = Number(s.qrIntervalSec) || 0;
+  let tok;
+  if (iv === 0) tok = (await sha256Hex(s.id + ':static:' + s.secret)).slice(0, 10);
+  else {
+    const w = Math.floor(Date.now() / (iv * 1000));
+    tok = (await sha256Hex(`${s.id}:${w}:${s.secret}`)).slice(0, 10);
+  }
+  return `${studentBaseUrl()}?s=${encodeURIComponent(s.id)}&t=${tok}`;
+}
+
+function drawQR(canvas, text) {
+  if (typeof qrcode === 'undefined') return;
+  const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
+  const n = qr.getModuleCount(), q = 3, tot = n + q * 2, cell = Math.max(6, Math.ceil(640 / tot));
+  canvas.width = canvas.height = tot * cell;
+  const c = canvas.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, canvas.width, canvas.height);
+  c.fillStyle = '#0B1F3A';
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (qr.isDark(r, k)) c.fillRect((k+q)*cell, (r+q)*cell, cell, cell);
+}
+
+async function tickLoop() {
+  if (!S.sess) return;
+  const now = Date.now();
+  const open = S.sess.status === 'OPEN' && now < S.sess.closesMs;
+  const rem = open ? Math.ceil((S.sess.closesMs - now) / 1000) : 0;
+
+  $('stTimer').textContent = fmtT(rem);
+  $('pjTimer').textContent = fmtT(rem);
+  $('stPill').className = 'status ' + (open ? 'open' : 'closed');
+  $('stTxt').textContent = open ? 'التسجيل مفتوح' : 'التسجيل مغلق';
+  $('qrClosed').hidden = open;
+  $('ctrlOpen').hidden = !open;
+  $('ctrlClosed').hidden = open;
+
+  if (open) {
+    const iv = Number(S.sess.qrIntervalSec) || 0;
+    if (iv === 0) {
+      $('qrNote').innerHTML = 'الرمز <b>ثابت</b> طوال مدة الجلسة';
+      $('qrFill').style.width = '100%';
+    } else {
+      const left = iv - Math.floor((now / 1000) % iv);
+      $('qrNote').innerHTML = `يتجدد الرمز بعد <b>${left}</b> ث`;
+      $('qrFill').style.width = `${(left / iv) * 100}%`;
+    }
+    const url = await currentQrUrl();
+    if (url !== S.lastQrUrl) {
+      S.lastQrUrl = url;
+      drawQR($('qrCanvas'), url);
+      if (!$('proj').hidden) drawQR($('pjCanvas'), url);
+    }
+  } else if (S.sess.status === 'OPEN') {
+    S.sess.status = 'CLOSED';
+    updateDoc(doc(db, 'sessions', S.sess.id), { status: 'CLOSED' }).catch(() => {});
+  }
+}
+
+function renderLists() {
+  const q = $('liveSearch').value.trim();
+  const active = S.records.filter(r => r.status !== 'EXCLUDED');
+  const excluded = S.records.filter(r => r.status === 'EXCLUDED');
+
+  $('stCount').textContent = active.length;
+  $('stExcl').textContent = excluded.length;
+  $('pjCount').textContent = active.length;
+  $('pjRegBadge').textContent = active.length;
+  $('pjExclCount').textContent = excluded.length;
+  $('pjExclBadge').textContent = excluded.length;
+
+  const filtered = active.filter(r => !q || (r.name + ' ' + r.studentId).includes(q));
+  $('liveList').innerHTML = filtered.length ? filtered.map((r, i) => `
+    <div class="rec">
+      <div class="n">${filtered.length - i}</div>
+      <div><div class="nm">${esc(r.name)}</div><div class="meta">${esc(r.studentId)} · ${esc(r.timeStr)}</div></div>
+      <button type="button" class="exbtn" data-id="${esc(r.studentId)}" data-nm="${esc(r.name)}">استبعاد</button>
+    </div>
+  `).join('') : '<div class="empty">لا توجد نتائج.</div>';
+
+  $('exclCard').hidden = excluded.length === 0;
+  $('exclList').innerHTML = excluded.map((r, i) => `
+    <div class="rec">
+      <div class="n" style="background:#FEE2E2;color:#991B1B">${i + 1}</div>
+      <div><div class="nm">${esc(r.name)}</div><span class="badge-reason">${esc(r.excludeReason)}</span></div>
+      <button type="button" class="resbtn" data-id="${esc(r.studentId)}">إرجاع</button>
+    </div>
+  `).join('');
+
+  // تحديث شاشة الداتا شو
+  $('pjRegList').innerHTML = active.map(r => `
+    <div class="pj-item"><span class="nm">${esc(r.name)}</span><span class="id">${esc(r.studentId)}</span></div>
+  `).join('') || '<div class="empty" style="color:rgba(255,255,255,.5)">في انتظار تسجيل الطلاب...</div>';
+
+  $('pjExclList').innerHTML = excluded.map(r => `
+    <div class="pj-excl-item"><div class="nm">${esc(r.name)}</div><div class="rs">${esc(r.excludeReason)}</div></div>
+  `).join('') || '<div class="empty" style="color:rgba(255,255,255,.45)">لا يوجد مستبعدون</div>';
+}
+
+$('liveSearch').addEventListener('input', renderLists);
+
+/* ---- الاستبعاد والإرجاع ---- */
+$('liveList').addEventListener('click', e => {
+  const b = e.target.closest('.exbtn'); if (!b) return;
+  S.targetStudent = { id: b.dataset.id, name: b.dataset.nm };
+  $('emStudent').textContent = `اختر سبب استبعاد الطالب: ${b.dataset.nm}`;
+  $('exclModal').hidden = false;
+});
+$('emCancel').onclick = () => { $('exclModal').hidden = true; S.targetStudent = null; };
+$('exclModal').addEventListener('click', async e => {
+  const b = e.target.closest('.r-btn'); if (!b || !S.targetStudent) return;
+  const reason = b.dataset.r;
+  const st = S.targetStudent;
+  $('exclModal').hidden = true; S.targetStudent = null;
+  try {
+    await updateDoc(doc(db, 'sessions', S.sess.id, 'attendance', st.id), {
+      status: 'EXCLUDED', excludeReason: reason, excludedMs: Date.now()
+    });
+    toast(`تم استبعاد ${st.name} (${reason})`);
+  } catch (err) { toast('تعذّر الاستبعاد', true); }
+});
+
+$('exclList').addEventListener('click', async e => {
+  const b = e.target.closest('.resbtn'); if (!b) return;
+  const id = b.dataset.id;
+  try {
+    S.seenExcluded.delete(id);
+    await updateDoc(doc(db, 'sessions', S.sess.id, 'attendance', id), {
+      status: 'ACTIVE', excludeReason: ''
+    });
+    toast('تم إرجاع الطالب إلى كشف الحضور');
+  } catch { toast('تعذّر الإرجاع', true); }
+});
+
+let ovTimer = null;
+function triggerBigExclusion(name, reason) {
+  if ($('proj').hidden) return;
+  $('ovName').textContent = name;
+  $('ovReason').textContent = 'السبب: ' + reason;
+  $('exclOverlay').hidden = false;
+  clearTimeout(ovTimer);
+  ovTimer = setTimeout(() => { $('exclOverlay').hidden = true; }, 6000);
+}
+
+/* ---- أزرار التحكم ---- */
+$('closeBtn').onclick = async () => {
+  S.sess.status = 'CLOSED';
+  await updateDoc(doc(db, 'sessions', S.sess.id), { status: 'CLOSED' });
+  tickLoop(); toast('تم إغلاق التسجيل');
+};
+$('extBtn').onclick = async () => {
+  S.sess.closesMs += 3 * 60000;
+  await updateDoc(doc(db, 'sessions', S.sess.id), { closesMs: S.sess.closesMs });
+  tickLoop(); toast('تمت إضافة 3 دقائق');
+};
+$('reopenBtn').onclick = async () => {
+  S.sess.status = 'OPEN'; S.sess.closesMs = Date.now() + 3 * 60000;
+  await updateDoc(doc(db, 'sessions', S.sess.id), { status: 'OPEN', closesMs: S.sess.closesMs });
+  tickLoop(); toast('أُعيد فتح التسجيل 3 دقائق');
+};
+$('newBtn').onclick = () => {
+  if (S.unsub) S.unsub(); clearInterval(S.timer); S.sess = null;
+  $('livePanel').hidden = true; $('startPanel').hidden = false;
+};
+$('copyBtn').onclick = () => { if (S.lastQrUrl) navigator.clipboard.writeText(S.lastQrUrl).then(() => toast('تم نسخ الرابط')); };
+$('testBtn').onclick = () => { if (S.lastQrUrl) window.open(S.lastQrUrl, '_blank'); };
+
+/* ---- الداتا شو ---- */
+$('projBtn').onclick = () => {
+  $('proj').hidden = false;
+  if (S.lastQrUrl) drawQR($('pjCanvas'), S.lastQrUrl);
+  try { document.documentElement.requestFullscreen?.(); } catch {}
+};
+$('projX').onclick = () => { $('proj').hidden = true; try { if (document.fullscreenElement) document.exitFullscreen(); } catch {} };
+$('pjToggleQr').onclick = () => {
+  const hide = !$('pjQrCol').hidden;
+  $('pjQrCol').hidden = hide;
+  $('pjGrid').classList.toggle('with-qr', !hide);
+};
+
+/* ---- تصدير Oracle (UTF-16 + Tab + B فارغ) ---- */
+function exportOracleCsv(sess, records) {
+  const active = records.filter(r => r.status !== 'EXCLUDED').reverse();
+  if (!active.length) { toast('لا يوجد حضور نشط للتصدير', true); return; }
+  const lines = [['الاسم', '', 'وقت المغادرة', 'البريد الإلكتروني'].join('\t')];
+  active.forEach(r => lines.push([r.displayName, '', r.timeStr, r.email].join('\t')));
+  const text = lines.join('\r\n');
+  const buf = new ArrayBuffer(2 + text.length * 2), v = new DataView(buf);
+  v.setUint8(0, 0xFF); v.setUint8(1, 0xFE);
+  for (let i = 0; i < text.length; i++) v.setUint16(2 + i * 2, text.charCodeAt(i), true);
+  const blob = new Blob([buf], { type: 'text/csv;charset=utf-16le' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `attendance_${sess.id}.csv`; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  toast(`تم تصدير ${active.length} طالب (بعد استبعاد المشاغبين)`);
+}
+$('exportLiveBtn').onclick = () => exportOracleCsv(S.sess, S.records);
+
+/* ---- السجل ---- */
+async function loadHistory() {
+  $('histItems').innerHTML = '<div class="empty">جاري التحميل...</div>';
+  try {
+    const snap = await getDocs(query(collection(db, 'sessions'), orderBy('openedMs', 'desc'), limit(25)));
+    if (snap.empty) { $('histItems').innerHTML = '<div class="empty">لا توجد مراجعات سابقة.</div>'; return; }
+    const items = []; snap.forEach(d => items.push(d.data()));
+    $('histItems').innerHTML = items.map(s => `
+      <div class="hist">
+        <div class="tx"><b>${esc(s.course)} — ${esc(s.title)}</b><small>${new Date(s.openedMs).toLocaleString('ar-EG')}</small></div>
+        <button type="button" class="btn sm ghost" data-open="${esc(s.id)}">فتح</button>
+      </div>
+    `).join('');
+    $('histItems').querySelectorAll('[data-open]').forEach(b => {
+      b.onclick = () => {
+        const s = items.find(x => x.id === b.dataset.open);
+        if (s) { $('tabLive').click(); enterSession(s); }
+      };
+    });
+  } catch { $('histItems').innerHTML = '<div class="empty">تعذّر تحميل السجل.</div>'; }
+}
+</script>
+</body>
+</html>
