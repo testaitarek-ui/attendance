@@ -56,11 +56,11 @@ svg{display:block}
 .btn{min-height:52px;border:0;border-radius:16px;font-weight:800;font-size:15.5px;color:#fff;padding:0 18px;background:linear-gradient(135deg,#0B1F3A,#17407A);box-shadow:0 14px 26px -12px rgba(11,31,58,.7);display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,opacity .2s;width:100%}
 .btn svg{width:20px;height:20px;color:var(--gold2)}
 .btn:active{transform:scale(.985)}
+.btn[disabled]{opacity:.7;cursor:wait}
 .btn.sm{min-height:44px;font-size:14px;padding:0 14px;width:auto;border-radius:13px;box-shadow:none}
 .btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line);box-shadow:none}
 .btn.ghost svg{color:var(--goldd)}
 .btn.danger{background:#fff;color:var(--bad);border:1.5px solid #F0B8B1;box-shadow:none}
-.btn.danger-fill{background:linear-gradient(135deg,#B42318,#DC2626);color:#fff;box-shadow:0 10px 20px -10px rgba(180,35,24,.7)}
 .btn.gold{background:linear-gradient(135deg,#C9A24B,#E8C873);color:#2A1F00;box-shadow:0 12px 22px -12px rgba(154,122,46,.8)}
 .btn.gold svg{color:#2A1F00}
 .row{display:flex;flex-wrap:wrap;gap:10px}
@@ -98,7 +98,6 @@ svg{display:block}
 .empty{text-align:center;color:var(--muted);padding:20px 8px;font-size:14px}
 .scroll-list{max-height:430px;overflow-y:auto;padding-inline-end:4px}
 
-/* ===== شاشة الداتا شو (المسجلين شمال — المستبعدين يمين) ===== */
 .proj{position:fixed;inset:0;z-index:60;background:linear-gradient(160deg,#08172B,#0F2B52);color:#fff;display:flex;flex-direction:column;padding:16px 22px}
 .proj-head{display:flex;align-items:center;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.14)}
 .proj-head .pill img{height:34px}
@@ -111,7 +110,6 @@ svg{display:block}
 .proj-head .kpi span{font-size:11px;color:rgba(255,255,255,.75)}
 .proj-head .kpi.red{background:rgba(220,38,38,.22);border-color:rgba(248,113,113,.45)}
 
-/* اتجاه LTR للشبكة عشان نضمن اليمين للمستبعدين والشمال للمسجلين بدقة */
 .proj-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:14px;direction:ltr}
 .proj-grid.with-qr{grid-template-columns:320px 1fr 340px}
 .proj-col{direction:rtl;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px 16px;display:flex;flex-direction:column;min-height:0}
@@ -132,7 +130,6 @@ svg{display:block}
 .pj-qr-box{background:#fff;border-radius:20px;padding:12px;width:100%;max-width:270px;aspect-ratio:1}
 .pj-qr-box canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 
-/* ===== التنبيه الكبير للاستبعاد ===== */
 .excl-overlay{position:fixed;inset:0;z-index:100;background:rgba(127,29,29,.95);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;animation:popIn .35s cubic-bezier(.2,.9,.3,1.1) both}
 @keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
 .excl-overlay .tag-top{background:#fff;color:#991B1B;font-weight:800;font-size:clamp(18px,2.2vw,28px);padding:8px 26px;border-radius:999px;margin-bottom:22px}
@@ -140,7 +137,6 @@ svg{display:block}
 .excl-overlay .big-reason{font-size:clamp(22px,3vw,40px);font-weight:800;color:#FEF08A;background:rgba(0,0,0,.3);padding:12px 32px;border-radius:20px;border:2px solid rgba(254,240,138,.5)}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* نافذة اختيار سبب الاستبعاد */
 .modal{position:fixed;inset:0;z-index:90;background:rgba(8,18,35,.6);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
 .modal .m{background:#fff;border-radius:26px;padding:24px;width:100%;max-width:420px;animation:rise .25s both}
 .modal h3{margin:0 0 4px;color:var(--navy);font-size:19px}
@@ -277,7 +273,6 @@ svg{display:block}
   </main>
 </div>
 
-<!-- شاشة الداتا شو -->
 <div class="proj" id="proj" hidden>
   <div class="proj-head">
     <div class="pill"><img src="https://hicit.sha.edu.eg/assets/img/logo.png" alt=""></div>
@@ -291,18 +286,15 @@ svg{display:block}
     </div>
   </div>
   <div class="proj-grid with-qr" id="pjGrid">
-    <!-- عمود الـQR -->
     <div class="proj-col pj-qr-wrap" id="pjQrCol">
       <div class="pj-qr-box"><canvas id="pjCanvas"></canvas></div>
       <p style="margin:12px 0 4px;font-weight:800;color:var(--gold2);font-size:16px">امسح الرمز لتسجيل الحضور</p>
       <small style="color:rgba(255,255,255,.7)">الاسم رباعي · الكود 9 أرقام</small>
     </div>
-    <!-- عمود المسجلين (شمال) -->
     <div class="proj-col reg">
       <h3><span>المسجلين في المراجعة</span><span id="pjRegBadge">0</span></h3>
       <div class="proj-scroll" id="pjRegList"></div>
     </div>
-    <!-- عمود المستبعدين (يمين) -->
     <div class="proj-col excl">
       <h3><span>المستبعدين</span><span id="pjExclBadge">0</span></h3>
       <div class="proj-scroll" id="pjExclList"></div>
@@ -310,14 +302,12 @@ svg{display:block}
   </div>
 </div>
 
-<!-- التنبيه الكبير عند الاستبعاد -->
 <div class="excl-overlay" id="exclOverlay" hidden>
   <div class="tag-top">تم استبعاد الطالب من المراجعة</div>
   <div class="big-name" id="ovName">—</div>
   <div class="big-reason" id="ovReason">—</div>
 </div>
 
-<!-- نافذة اختيار سبب الاستبعاد -->
 <div class="modal" id="exclModal" hidden>
   <div class="m">
     <h3>استبعاد طالب من الغياب</h3>
@@ -334,9 +324,8 @@ svg{display:block}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { initializeFirestore, collection, doc, setDoc, updateDoc, getDocs, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-// كلمة مرور لوحة المعيد (غيّرها كما تشاء)
 const ADMIN_PASS = "1@23@45@6";
 
 const firebaseConfig = {
@@ -348,7 +337,7 @@ const firebaseConfig = {
   appId: "1:153637902159:web:f6cab30f91cd7c95dd173a"
 };
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 
 const $ = id => document.getElementById(id);
 const S = {
@@ -360,7 +349,7 @@ function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'
 function fmtT(sec) { sec = Math.max(0, Math.floor(sec)); return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`; }
 function toast(msg, bad=false) {
   const t = document.createElement('div'); t.className = 'toast' + (bad ? ' bad' : ''); t.textContent = msg;
-  document.body.appendChild(t); setTimeout(() => t.remove(), 2800);
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3500);
 }
 async function sha256Hex(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -373,7 +362,6 @@ function studentBaseUrl() {
   return u.toString();
 }
 
-/* ---- الدخول ---- */
 $('loginForm').addEventListener('submit', e => {
   e.preventDefault();
   if ($('pw').value === ADMIN_PASS) {
@@ -384,7 +372,6 @@ $('loginForm').addEventListener('submit', e => {
 $('logoutBtn').onclick = () => { sessionStorage.removeItem('adm_ok'); location.reload(); };
 if (sessionStorage.getItem('adm_ok') === '1') { $('login').hidden = true; $('app').hidden = false; }
 
-/* ---- التبويبات والإعدادات ---- */
 $('tabLive').onclick = () => { $('tabLive').classList.add('on'); $('tabHist').classList.remove('on'); $('paneLive').hidden = false; $('paneHist').hidden = true; };
 $('tabHist').onclick = () => { $('tabHist').classList.add('on'); $('tabLive').classList.remove('on'); $('paneHist').hidden = false; $('paneLive').hidden = true; loadHistory(); };
 
@@ -399,8 +386,9 @@ $('qrChips').addEventListener('click', e => {
   $('qrChips').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b));
 });
 
-/* ---- فتح جلسة ---- */
 $('openBtn').onclick = async () => {
+  const btn = $('openBtn');
+  if (btn.disabled) return;
   const course = $('courseInput').value.trim() || 'مراجعة';
   const title = $('titleInput').value.trim() || 'مدرج';
   const now = Date.now();
@@ -412,12 +400,22 @@ $('openBtn').onclick = async () => {
     openedMs: now, closesMs: now + S.dur * 60000,
     durationMin: S.dur, qrIntervalSec: S.qrIv, secret
   };
+  btn.disabled = true;
+  btn.textContent = 'جاري فتح الجلسة...';
   try {
-    await setDoc(doc(db, 'sessions', id), sess);
+    await Promise.race([
+      setDoc(doc(db, 'sessions', id), sess),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), 12000))
+    ]);
     enterSession(sess);
   } catch (err) {
-    console.error(err);
-    toast('تعذّر فتح الجلسة. تأكد من قواعد Firestore والإنترنت.', true);
+    console.error('openSession error:', err);
+    toast(err.message === 'TIMEOUT'
+      ? 'انتهت مهلة الاتصال بـ Firebase. تأكد من الإنترنت أو أوقف AdBlock.'
+      : 'تعذّر فتح الجلسة: ' + (err.code || err.message), true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'فتح التسجيل وإظهار QR';
   }
 };
 
@@ -433,7 +431,6 @@ function enterSession(sess) {
   S.unsub = onSnapshot(q, snap => {
     const list = [];
     snap.forEach(d => list.push(d.data()));
-    // كشف أي استبعاد جديد لإظهار التنبيه الكبير على الداتا شو
     if (S.initializedExcl) {
       list.forEach(r => {
         if (r.status === 'EXCLUDED' && !S.seenExcluded.has(r.studentId)) {
@@ -542,7 +539,6 @@ function renderLists() {
     </div>
   `).join('');
 
-  // تحديث شاشة الداتا شو
   $('pjRegList').innerHTML = active.map(r => `
     <div class="pj-item"><span class="nm">${esc(r.name)}</span><span class="id">${esc(r.studentId)}</span></div>
   `).join('') || '<div class="empty" style="color:rgba(255,255,255,.5)">في انتظار تسجيل الطلاب...</div>';
@@ -554,7 +550,6 @@ function renderLists() {
 
 $('liveSearch').addEventListener('input', renderLists);
 
-/* ---- الاستبعاد والإرجاع ---- */
 $('liveList').addEventListener('click', e => {
   const b = e.target.closest('.exbtn'); if (!b) return;
   S.targetStudent = { id: b.dataset.id, name: b.dataset.nm };
@@ -597,7 +592,6 @@ function triggerBigExclusion(name, reason) {
   ovTimer = setTimeout(() => { $('exclOverlay').hidden = true; }, 6000);
 }
 
-/* ---- أزرار التحكم ---- */
 $('closeBtn').onclick = async () => {
   S.sess.status = 'CLOSED';
   await updateDoc(doc(db, 'sessions', S.sess.id), { status: 'CLOSED' });
@@ -620,7 +614,6 @@ $('newBtn').onclick = () => {
 $('copyBtn').onclick = () => { if (S.lastQrUrl) navigator.clipboard.writeText(S.lastQrUrl).then(() => toast('تم نسخ الرابط')); };
 $('testBtn').onclick = () => { if (S.lastQrUrl) window.open(S.lastQrUrl, '_blank'); };
 
-/* ---- الداتا شو ---- */
 $('projBtn').onclick = () => {
   $('proj').hidden = false;
   if (S.lastQrUrl) drawQR($('pjCanvas'), S.lastQrUrl);
@@ -633,7 +626,6 @@ $('pjToggleQr').onclick = () => {
   $('pjGrid').classList.toggle('with-qr', !hide);
 };
 
-/* ---- تصدير Oracle (UTF-16 + Tab + B فارغ) ---- */
 function exportOracleCsv(sess, records) {
   const active = records.filter(r => r.status !== 'EXCLUDED').reverse();
   if (!active.length) { toast('لا يوجد حضور نشط للتصدير', true); return; }
@@ -651,7 +643,6 @@ function exportOracleCsv(sess, records) {
 }
 $('exportLiveBtn').onclick = () => exportOracleCsv(S.sess, S.records);
 
-/* ---- السجل ---- */
 async function loadHistory() {
   $('histItems').innerHTML = '<div class="empty">جاري التحميل...</div>';
   try {

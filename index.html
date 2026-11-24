@@ -229,7 +229,7 @@ body{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import { getFirestore, doc, getDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { initializeFirestore, doc, getDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCUwRX-2GfbA-yjWR-oJSkde30bZBc453s",
@@ -240,7 +240,7 @@ const firebaseConfig = {
   appId: "1:153637902159:web:f6cab30f91cd7c95dd173a"
 };
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 
 const $ = id => document.getElementById(id);
 const urlParams = new URLSearchParams(window.location.search);
@@ -431,7 +431,6 @@ $('view-form').addEventListener('submit', async e => {
     const email = `${studentId}@sha.edu.eg`;
     const timeStr = fmtOracleTime(new Date());
 
-    // فحص سريع لحالة الجلسة والـQR قبل الكتابة
     const sessSnap = await getDoc(doc(db, 'sessions', SID));
     if (!sessSnap.exists()) throw new Error('CLOSED');
     const sess = { id: sessSnap.id, ...sessSnap.data() };
