@@ -337,7 +337,7 @@ const firebaseConfig = {
   appId: "1:153637902159:web:f6cab30f91cd7c95dd173a"
 };
 const app = initializeApp(firebaseConfig);
-const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+const db = initializeFirestore(app, { experimentalForceLongPolling: true }, 'default');
 
 const $ = id => document.getElementById(id);
 const S = {
